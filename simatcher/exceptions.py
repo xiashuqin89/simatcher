@@ -39,3 +39,20 @@ class ActionFailed(ApiError):
 
 class NetworkError(Error, IOError):
     pass
+
+
+class InvalidProjectError(Error):
+    def __init__(self, message: str):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
+
+class MissingArgumentError(ValueError):
+    def __init__(self, message: str):
+        super(MissingArgumentError, self).__init__(message)
+        self.message = message
+
+    def __str__(self):
+        return self.message

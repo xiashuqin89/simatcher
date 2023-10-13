@@ -3,3 +3,4 @@ uvicorn
 faiss-cpu
 sentence-transformers
 pandas
+redis==3.5.3
