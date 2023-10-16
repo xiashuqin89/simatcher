@@ -56,3 +56,11 @@ class MissingArgumentError(ValueError):
 
     def __str__(self):
         return self.message
+
+
+class PipelineRunningAbnormalError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message

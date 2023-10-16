@@ -32,9 +32,3 @@ class SentenceFaiss:
     def train(self):
         self.normalize(self.vector_pool)
         self.faiss_index.add(self.vector_pool)
-
-    def load(self):
-        pass
-
-    def persist(self):
-        pass

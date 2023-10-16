@@ -1,19 +1,14 @@
 import os
 from typing import Text, Optional, Any, Dict
 
-from shuai.common import (
-    Message, TrainingData, TrainerModelConfig,
-    py_cloud_pickle, py_cloud_unpickle
-)
-from shuai.nlp.meta import Metadata
-from shuai.nlp.components import Component
+from simatcher.nlp.base import Component
+from simatcher.meta.message import Message
+from simatcher.meta.model import Metadata
+from simatcher.common.io import py_cloud_pickle, py_cloud_unpickle
 
 
 class Classifier(Component):
-    def train(self,
-              training_data: TrainingData,
-              cfg: TrainerModelConfig,
-              **kwargs):
+    def train(self, *args, **kwargs):
         pass
 
     def process(self, message: Message, **kwargs):
