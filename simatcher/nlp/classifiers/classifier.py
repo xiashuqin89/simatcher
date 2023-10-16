@@ -28,9 +28,9 @@ class Classifier(Component):
              **kwargs) -> Any:
         meta = model_metadata.for_component(cls.name)
         file_name = meta.get("classifier_file", f'{cls.name}.pkl')
-        classifier_file = os.path.join(model_dir, file_name)
-
-        if os.path.exists(classifier_file):
-            return py_cloud_unpickle(classifier_file)
+        if model_dir is not None:
+            classifier_file = os.path.join(model_dir, file_name)
+            if os.path.exists(classifier_file):
+                return py_cloud_unpickle(classifier_file)
         else:
             return cls(meta)

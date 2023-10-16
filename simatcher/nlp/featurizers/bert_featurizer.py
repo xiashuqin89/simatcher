@@ -6,7 +6,7 @@ import numpy as np
 from torch import Tensor
 from sentence_transformers import SentenceTransformer
 
-from simatcher.nlp.constants import (
+from simatcher.constants import (
     FEATURIZER_BERT, TEXT_FEATURES, POOL_FEATURES,
     TEXT, POOL
 )

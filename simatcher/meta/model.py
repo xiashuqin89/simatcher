@@ -10,9 +10,10 @@ from simatcher.common.io import write_json_to_file, read_json_file
 
 
 class Metadata(object):
-    def __init__(self, metadata: Dict[Text, Any], model_dir: Optional[Text]):
+    def __init__(self, metadata: Dict[Text, Any], model_dir: Optional[Text] = None):
         self.metadata = metadata or defaultdict()
         self.model_dir = model_dir
+        self.default_archive_name = 'metadata.json'
 
     @staticmethod
     def load(model_dir: Text) -> 'Metadata':

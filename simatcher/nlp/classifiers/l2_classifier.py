@@ -3,7 +3,7 @@ from typing import (
 )
 
 import numpy as np
-from simatcher.nlp.constants import (
+from simatcher.constants import (
     CLASSIFIER_L2, TEXT_FEATURES, POOL_FEATURES,
     RANKING
 )

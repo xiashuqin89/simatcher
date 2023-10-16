@@ -4,7 +4,7 @@ from typing import Text, Dict, Any, Optional, List
 import numpy as np
 
 from simatcher.nlp.base import Component
-from simatcher.nlp.constants import TEXT_FEATURES
+from simatcher.constants import TEXT_FEATURES
 from simatcher.meta.message import Message
 from simatcher.meta.model import Metadata
 from simatcher.log import logger
@@ -35,13 +35,13 @@ class Featurizer(Component):
              cached_component: Optional[Component] = None,
              **kwargs):
         meta = model_metadata.for_component(cls.name)
-        if model_dir and meta.get('featurizer_file'):
+        if model_dir is not None and meta.get('featurizer_file'):
             file_name = meta['featurizer_file']
             featurizer_file = os.path.join(model_dir, file_name)
             return py_cloud_unpickle(featurizer_file)
         else:
-            logger.warning("Failed to load featurizer. Maybe path {} "
-                           "doesn't exist".format(os.path.abspath(model_dir)))
+            logger.warning(f"Failed to load featurizer. Maybe path {model_dir} "
+                           "doesn't exist")
             return cls(meta)
 
     def persist(self, model_dir: Text) -> Dict[Text, Any]:
