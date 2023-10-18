@@ -11,7 +11,8 @@ BKCHAT_PIPELINE_CONFIG = {
         {
             "name": "BertFeaturizer",
             "featurizer_file": "BertFeaturizer.pkl",
-            "class": "simatcher.nlp.featurizers.BertFeaturizer"
+            "class": "simatcher.nlp.featurizers.BertFeaturizer",
+            "pre_model": "sbert-chinese-general-v2"
         },
         {
             "name": "L2Classifier",

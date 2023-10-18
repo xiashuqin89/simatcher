@@ -8,7 +8,7 @@ import pandas as pd
 
 from simatcher.exceptions import ActionFailed
 from simatcher.engine.base import Runner
-from simatcher.constants import RANKING
+from simatcher.constants import RANKING, INTENT
 from .config import *
 
 
@@ -71,12 +71,10 @@ class BKChatEngine:
                  pool: List,
                  output_properties: Dict = None,
                  only_output_properties=True):
+        output_properties = output_properties or {RANKING, INTENT}
         message = self.runner.parse(text, output_properties=output_properties,
                                     pool=pool, text_col='utterance')
-        df = pd.DataFrame(pool)
-        results = pd.DataFrame(message.get(RANKING))
-        merge = pd.merge(results, df, left_on='ann', right_index=True)
-        return merge.to_dict('records')
+        return message.as_dict(only_output_properties=only_output_properties)
 
     def extractor(self):
         pass
