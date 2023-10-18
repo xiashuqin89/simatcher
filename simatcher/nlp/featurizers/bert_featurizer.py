@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 
 from simatcher.constants import (
     FEATURIZER_BERT, TEXT_FEATURES, POOL_FEATURES,
-    TEXT, POOL
+    TEXT, POOL, TEXT_COL
 )
 from simatcher.meta.message import Message
 from simatcher.log import logger
@@ -42,7 +42,7 @@ class BertFeaturizer(Featurizer):
         # matrix
         pool: List[Dict] = message.get(POOL)
         df = pd.DataFrame(pool)
-        pool: Union[List[Tensor], np.ndarray, Tensor] = self.encoder_model.encode(df['utterance'])
+        pool: Union[List[Tensor], np.ndarray, Tensor] = self.encoder_model.encode(df[message.get(TEXT_COL)])
         message.set(POOL_FEATURES, pool)
         # vector
         text: Union[List[Tensor], np.ndarray, Tensor] = self.encoder_model.encode(message.text)

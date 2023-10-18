@@ -35,13 +35,6 @@ class L2Classifier(Classifier):
             'distances': similarity['distances'][0],
             'ann': similarity['ann'][0]
         })
-        # results = pd.DataFrame({
-        #     'distances': similarity['distances'][0],
-        #     'ann': similarity['ann'][0]
-        # })
-        # merge = pd.merge(results, df, left_on='ann', right_index=True)
-        # labels = df['id']
-        # id = labels[similarity['ann'][0][0]]
 
     def predict(self, x: List) -> Tuple[np.ndarray, np.ndarray]:
         pass

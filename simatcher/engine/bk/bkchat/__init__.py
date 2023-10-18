@@ -71,7 +71,8 @@ class BKChatEngine:
                  pool: List,
                  output_properties: Dict = None,
                  only_output_properties=True):
-        message = self.runner.parse(text, output_properties=output_properties, pool=pool)
+        message = self.runner.parse(text, output_properties=output_properties,
+                                    pool=pool, text_col='utterance')
         df = pd.DataFrame(pool)
         results = pd.DataFrame(message.get(RANKING))
         merge = pd.merge(results, df, left_on='ann', right_index=True)
