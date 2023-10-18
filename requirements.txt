@@ -3,4 +3,5 @@ uvicorn
 faiss-cpu
 sentence-transformers
 pandas
+aiohttp
 redis==3.5.3

@@ -6,7 +6,9 @@ from simatcher.log import logger
 from simatcher.common.stdlib import override_defaults, class_from_module_path
 from simatcher.meta.model import Metadata
 from simatcher.meta.message import Message
-from simatcher.exceptions import MissingArgumentError, InvalidRecipeException
+from simatcher.exceptions import (
+    MissingArgumentError, InvalidRecipeException, UnsupportedLanguageError,
+)
 
 
 class Component(object):
@@ -61,6 +63,9 @@ class Component(object):
 
     @classmethod
     def create(cls, cfg: Dict, *args, **kwargs):
+        language = cfg.get('language')
+        if not cls.can_handle_language(language):
+            raise UnsupportedLanguageError(cls.name, language)
         return cls(cfg)
 
     def train(self, *args, **kwargs):

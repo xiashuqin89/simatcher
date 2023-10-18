@@ -8,7 +8,8 @@ from fastapi.responses import JSONResponse
 from simatcher.exceptions import Error
 from simatcher.cli.api.auth import SelfOAuth2PasswordBearer
 from simatcher.cli.api.reponse import Response
-from simatcher.engine.base import Runner
+from simatcher.engine import BKChatEngine
+from .models import BKChatModel
 
 
 oauth2_scheme = SelfOAuth2PasswordBearer(tokenUrl="token")
@@ -35,29 +36,9 @@ async def unicorn_exception_handler(request: Request, exc: Error):
     )
 
 
-@app.get("/")
-async def root():
-    return "Hello world!"
-
-
-@app.get("/api/model/")
-def load(bk_uid: Optional[str] = Cookie(None)):
-    Runner.load({
-        "language": "zh",
-        "training_data": "",
-        "pipeline": [
-            {
-                "name": "BertFeaturizer",
-                "featurizer_file": "BertFeaturizer.pkl",
-                "class": "simatcher.nlp.featurizers.BertFeaturizer"
-            },
-            {
-                "name": "L2Classifier",
-                "classifier_file": "L2Classifier.pkl",
-                "class": "simatcher.nlp.classifiers.L2Classifier"
-            }
-        ],
-        "trained_at": "20231016-145515",
-        "version": "0.0.0"
-    })
-    return Response()
+@app.post("/api/bkchat/")
+async def predict_bkchat(item: BKChatModel, bk_uid: Optional[str] = Cookie(None)):
+    engine = BKChatEngine()
+    pool = await engine.load_corpus_text(**item.filter)
+    result = engine.classify(item.text, pool=pool)
+    return Response(data=result)

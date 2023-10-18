@@ -70,7 +70,6 @@ class Runner(object):
             model_metadata = Metadata.load(model_source)
         else:
             model_metadata = Metadata(model_source)
-
         Runner.ensure_model_compatibility(model_metadata)
         return Runner.create(model_metadata,
                              component_builder,
@@ -78,15 +77,15 @@ class Runner(object):
 
     def parse(self,
               text: Text,
-              time=None,
               output_properties: Dict = None,
-              only_output_properties=True) -> Dict[Text, Any]:
+              time=None,
+              **kwargs) -> Message:
         """
         Parse the input text, classify it and return pipeline result.
         The pipeline result usually contains intent and entities.
         """
 
-        message = Message(text, output_properties, time=time)
+        message = Message(text, kwargs, output_properties=output_properties, time=time)
         for component in self.pipeline:
             component.process(message, **self.context)
-        return message.as_dict(only_output_properties=only_output_properties)
+        return message

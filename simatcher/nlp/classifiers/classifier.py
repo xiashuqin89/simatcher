@@ -14,12 +14,6 @@ class Classifier(Component):
     def process(self, message: Message, **kwargs):
         pass
 
-    def persist(self, model_dir: Text) -> Dict[Text, Text]:
-        file_name = f'{self.name}.pkl'
-        classifier_file = os.path.join(model_dir, file_name)
-        py_cloud_pickle(classifier_file, self)
-        return {"classifier_file": file_name}
-
     @classmethod
     def load(cls,
              model_dir: Optional[Text] = None,
@@ -34,3 +28,9 @@ class Classifier(Component):
                 return py_cloud_unpickle(classifier_file)
         else:
             return cls(meta)
+
+    def persist(self, model_dir: Text) -> Dict[Text, Text]:
+        file_name = f'{self.name}.pkl'
+        classifier_file = os.path.join(model_dir, file_name)
+        py_cloud_pickle(classifier_file, self)
+        return {"classifier_file": file_name}

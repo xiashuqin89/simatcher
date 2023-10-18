@@ -31,7 +31,10 @@ class L2Classifier(Classifier):
         sf = SentenceFaiss(message.get(POOL_FEATURES))
         sf.train()
         similarity = sf.process(message.get(TEXT_FEATURES), 5)
-        message.set(RANKING, similarity)
+        message.set(RANKING, {
+            'distances': similarity['distances'][0],
+            'ann': similarity['ann'][0]
+        })
         # results = pd.DataFrame({
         #     'distances': similarity['distances'][0],
         #     'ann': similarity['ann'][0]
