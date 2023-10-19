@@ -18,6 +18,12 @@ BKCHAT_PIPELINE_CONFIG = {
             "name": "L2Classifier",
             "classifier_file": "L2Classifier.pkl",
             "class": "simatcher.nlp.classifiers.L2Classifier"
+        },
+        {
+            "name": "RegexRuleEntityExtractor",
+            "entity_regex_file": "entity_regex.json",
+            "class": "simatcher.nlp.extractors.RegexRuleEntityExtractor",
+            "sys_pattern_value": ["${USER_ID}", "${GROUP_ID}"]
         }
     ],
     "trained_at": "20231016-145515",

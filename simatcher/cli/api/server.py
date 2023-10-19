@@ -40,5 +40,6 @@ async def unicorn_exception_handler(request: Request, exc: Error):
 async def predict_bkchat(item: BKChatModel, bk_uid: Optional[str] = Cookie(None)):
     engine = BKChatEngine()
     pool = await engine.load_corpus_text(**item.filter)
-    result = engine.classify(item.text, pool=pool)
+    slots = await engine.load_slots(**item.filter)
+    result = engine.classify(item.text, pool=pool, regex_features=slots)
     return Response(data=result)

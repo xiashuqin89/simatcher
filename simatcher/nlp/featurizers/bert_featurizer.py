@@ -11,13 +11,12 @@ from simatcher.constants import (
     TEXT, POOL, TEXT_COL, POOL_DATA_FRAME
 )
 from simatcher.meta.message import Message
-from simatcher.log import logger
 from .featurizer import Featurizer
 
 
 class BertFeaturizer(Featurizer):
     name = FEATURIZER_BERT
-    provides = [TEXT_FEATURES, POOL_FEATURES]
+    provides = [TEXT_FEATURES, POOL_FEATURES, POOL_DATA_FRAME]
     requires = [TEXT, POOL]
 
     def __init__(self, component_config: Dict[Text, Any] = None):

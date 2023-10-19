@@ -1,10 +1,9 @@
 import json
 import itertools
-from typing import Dict, List, Text
+from typing import Dict, List, Text, Generator
 import urllib
 
 import aiohttp
-import pandas as pd
 
 from simatcher.exceptions import ActionFailed
 from simatcher.engine.base import Runner
@@ -30,9 +29,24 @@ async def _load_data_from_remote(path: str,
 
 
 class BKChatEngine:
-    def __init__(self, config: Dict = BKCHAT_PIPELINE_CONFIG, *args, **kwargs):
-        self.config = config
-        self.runner = Runner.load(config)
+    def __init__(self, pipeline_config: Dict = BKCHAT_PIPELINE_CONFIG, *args, **kwargs):
+        self.pipeline_config = pipeline_config.copy()
+        self.runner = Runner.load(self.pipeline_config)
+
+    @classmethod
+    async def load_slots(cls, **kwargs) -> Generator:
+        response = await _load_data_from_remote('api/v1/exec/admin_describe_tasks', json=kwargs)
+        tasks = response.get('data', [])
+        regex_features = []
+        if tasks:
+            for task in tasks:
+                slots = task['slots']
+                slots.reverse()
+                for slot in slots:
+                    slot.setdefault('value', '')
+                    slot['usage'] = task['index_id']
+                    regex_features.append(slot)
+        return regex_features
 
     @classmethod
     async def load_corpus_text(cls, **kwargs) -> List:
@@ -70,10 +84,11 @@ class BKChatEngine:
                  text: Text,
                  pool: List,
                  output_properties: Dict = None,
-                 only_output_properties=True):
+                 only_output_properties=True,
+                 regex_features: List = None):
         output_properties = output_properties or {RANKING, INTENT}
         message = self.runner.parse(text, output_properties=output_properties,
-                                    pool=pool, text_col='utterance')
+                                    pool=pool, text_col='utterance', regex_features=regex_features)
         return message.as_dict(only_output_properties=only_output_properties)
 
     def extractor(self):

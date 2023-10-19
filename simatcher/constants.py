@@ -11,6 +11,8 @@ POOL = 'pool'
 POOL_FEATURES = 'pool_features'
 POOL_DATA_FRAME = 'pool_data_frame'
 
+REGEX_FEATURES = 'regex_features'
+
 ENTITY_SYNONYMS_FILE_NAME = 'entity_synonyms.json'
 ENTITY_ATTRIBUTE_TYPE = 'entity'
 ENTITY_ATTRIBUTE_START = 'start'
@@ -22,4 +24,4 @@ FEATURIZER_BERT = 'BertFeaturizer'
 
 CLASSIFIER_L2 = 'L2Classifier'
 
-REGEX_EXTRACTOR_REGEX = 'RegexEntityExtractor'
+EXTRACTOR_REGEX_RULE = 'RegexRuleEntityExtractor'
