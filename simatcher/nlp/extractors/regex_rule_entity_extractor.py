@@ -26,15 +26,17 @@ class RegexRuleEntityExtractor(EntityExtractor):
         super(RegexRuleEntityExtractor, self).__init__(component_config)
         self.component_config = component_config
         self.case_sensitive = self.component_config.get('case_sensitive')
+        self.mode = self.component_config.get('mode', 'mini')
+        self.splitter = self.component_config.get('splitter', r'\?+|\s+')
         self.patterns = known_patterns or []
         self.stupid_patterns = ['.*', '^.+$', '']
 
     def _preprocess_text(self, message: Message) -> Iterable:
         if all([slot['pattern'] in self.stupid_patterns for slot in self.patterns]):
-            clean_params = re.split(r"\?+|\s+", message.text)[1:]
+            clean_params = re.split(self.splitter, message.text)[1:]
         else:
-            params = re.split(r"\?+|\s+", str(''.join([letter if ord(letter) < 128 else '?'
-                                                       for letter in message.text])))
+            params = re.split(self.splitter, str(''.join([letter if ord(letter) < 128 else '?'
+                                                          for letter in message.text])))
             utterance = message.get(INTENT).get('utterance', '')
             clean_params = [
                 letter.strip() for letter in params if letter and letter not in utterance
@@ -49,20 +51,18 @@ class RegexRuleEntityExtractor(EntityExtractor):
         4, add biz special function
         """
         clean_params = self._preprocess_text(message)
-        entities = []
         if not self.case_sensitive:
             flags = re.IGNORECASE
 
-        for slot in self.patterns:
-            if slot.get('usage') and slot['usage'] != message.get(INTENT).get('id'):
-                continue
+        entities = [
+            slot for slot in self.patterns if slot.get('usage') and slot['usage'] == message.get(INTENT).get('id')
+        ]
+        for slot in entities:
             if slot[ENTITY_ATTRIBUTE_VALUE] in self.component_config.get('sys_pattern_value'):
-                entities.append(slot)
                 continue
             if slot['pattern'] in self.stupid_patterns:
                 try:
                     slot[ENTITY_ATTRIBUTE_VALUE] = clean_params.popleft()
-                    entities.append(slot)
                 except IndexError:
                     logger.warning('There is no more text for extracting')
                 continue
@@ -83,8 +83,9 @@ class RegexRuleEntityExtractor(EntityExtractor):
                 try:
                     clean_params.remove(slot[ENTITY_ATTRIBUTE_VALUE])
                 except ValueError:
-                    pass
-            entities.append(slot)
+                    logger.warning('There is no params text for removing')
+        if self.mode == 'mini':
+            return [slot for slot in entities if slot['value']]
         return entities
 
     def train(self,

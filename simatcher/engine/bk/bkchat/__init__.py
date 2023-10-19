@@ -41,8 +41,7 @@ class BKChatEngine:
         if tasks:
             for task in tasks:
                 slots = task['slots']
-                slots.reverse()
-                for slot in slots:
+                for slot in slots[::-1]:
                     slot.setdefault('value', '')
                     slot['usage'] = task['index_id']
                     regex_features.append(slot)
