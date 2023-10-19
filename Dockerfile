@@ -1,4 +1,4 @@
-FROM python:3.10.10
+FROM ${BASE_IMAGE}
 
 WORKDIR /app
 
