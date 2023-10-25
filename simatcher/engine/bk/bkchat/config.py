@@ -1,5 +1,6 @@
 import os
 
+
 BKCHAT_APP_ID = os.getenv('BKCHAT_APP_ID')
 BKCHAT_APP_SECRET = os.getenv('BKCHAT_APP_SECRET')
 BKCHAT_APIGW_ROOT = os.getenv('BKCHAT_APIGW_ROOT')

@@ -1,6 +1,5 @@
 import json
 import copy
-import itertools
 from typing import Dict, List, Text, Generator, Union
 import urllib
 
