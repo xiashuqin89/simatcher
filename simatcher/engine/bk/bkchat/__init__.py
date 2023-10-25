@@ -1,6 +1,7 @@
 import json
+import copy
 import itertools
-from typing import Dict, List, Text, Generator
+from typing import Dict, List, Text, Generator, Union
 import urllib
 
 import aiohttp
@@ -48,7 +49,7 @@ class BKChatEngine:
         return regex_features
 
     @classmethod
-    async def load_corpus_text(cls, **kwargs) -> List:
+    async def load_corpus_text(cls, **kwargs) -> Union[List, Generator, None]:
         response = await _load_data_from_remote('api/v1/exec/admin_describe_intents', json=kwargs)
         db_intents = response.get('data', [])
         if not db_intents:
@@ -59,25 +60,13 @@ class BKChatEngine:
         response = await _load_data_from_remote('api/v1/exec/admin_describe_utterances',
                                                 json={'data': {'index_id__in': list(intent_map.keys())}})
         db_utterances = response.get('data', [])
-        return list(itertools.chain(*[
-            [
-                {
-                    'utterance': sentence,
-                    'id': intent_map[utterance['index_id']]['id'],
-                    'intent_name': intent_map[utterance['index_id']]['intent_name'],
-                    'is_commit': intent_map[utterance['index_id']]['is_commit'],
-                    'status': intent_map[utterance['index_id']]['status'],
-                    'available_user': intent_map[utterance['index_id']]['available_user'],
-                    'available_group': intent_map[utterance['index_id']]['available_group'],
-                    'biz_id': intent_map[utterance['index_id']]['biz_id'],
-                    'updated_by': intent_map[utterance['index_id']]['updated_by'],
-                    'approver': intent_map[utterance['index_id']]['approver'],
-                    'notice_discern_success': intent_map[utterance['index_id']].get('notice_discern_success', True),
-                    'notice_start_success': intent_map[utterance['index_id']].get('notice_start_success', True),
-                    'notice_exec_success': intent_map[utterance['index_id']].get('notice_exec_success', True)
-                } for sentence in utterance['content']
-            ] for utterance in db_utterances
-        ]))
+        utterance_intents = []
+        for utterance in db_utterances:
+            for sentence in utterance['content']:
+                intent = copy.deepcopy(intent_map[utterance['index_id']])
+                intent['utterance'] = sentence
+                utterance_intents.append(intent)
+        return utterance_intents
 
     def classify(self,
                  text: Text,
@@ -85,6 +74,8 @@ class BKChatEngine:
                  output_properties: Dict = None,
                  only_output_properties=True,
                  regex_features: List = None):
+        if not pool:
+            return {}
         output_properties = output_properties or {RANKING, INTENT}
         message = self.runner.parse(text, output_properties=output_properties,
                                     pool=pool, text_col='utterance', regex_features=regex_features)
