@@ -1,3 +1,4 @@
+import re
 import json
 import copy
 from typing import Dict, List, Text, Generator, Union
@@ -63,7 +64,7 @@ class BKChatEngine:
         for utterance in db_utterances:
             for sentence in utterance['content']:
                 intent = copy.deepcopy(intent_map[utterance['index_id']])
-                intent['utterance'] = sentence
+                intent['utterance'] = sentence.lower()
                 utterance_intents.append(intent)
         return utterance_intents
 
@@ -76,8 +77,14 @@ class BKChatEngine:
         if not pool:
             return {}
         output_properties = output_properties or {RANKING, INTENT}
-        message = self.runner.parse(text.lower(), output_properties=output_properties,
-                                    pool=pool, text_col='utterance', regex_features=regex_features)
+        prune = text.split(' ', maxsplit=1)
+        prune[0] = prune[0].lower()
+        prune = ' '.join(prune)
+        message = self.runner.parse(prune,
+                                    output_properties=output_properties,
+                                    pool=pool,
+                                    text_col='utterance',
+                                    regex_features=regex_features)
         return message.as_dict(only_output_properties=only_output_properties)
 
     def extractor(self):
