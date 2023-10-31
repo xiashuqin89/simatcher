@@ -76,7 +76,7 @@ class BKChatEngine:
         if not pool:
             return {}
         output_properties = output_properties or {RANKING, INTENT}
-        message = self.runner.parse(text, output_properties=output_properties,
+        message = self.runner.parse(text.lower(), output_properties=output_properties,
                                     pool=pool, text_col='utterance', regex_features=regex_features)
         return message.as_dict(only_output_properties=only_output_properties)
 
