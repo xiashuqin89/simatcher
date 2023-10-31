@@ -14,7 +14,7 @@ output: item[Union[List, Dict]]
 class SentenceFaiss:
     def __init__(self, vector_pool: Union[List[Tensor], np.ndarray, Tensor]):
         self.vector_pool = vector_pool
-        self.faiss_index = faiss.IndexFlatL2(vector_pool.shape[1])
+        self.faiss_index = faiss.IndexFlatIP(vector_pool.shape[1])
 
     @classmethod
     def normalize(cls, vector: Union[List[Tensor], np.ndarray, Tensor]):

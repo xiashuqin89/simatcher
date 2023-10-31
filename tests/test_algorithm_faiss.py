@@ -5,9 +5,9 @@ from simatcher.algorithm.beta import SentenceFaiss
 
 
 intents = [
-    ['正式服发布', 5],
+    ['QA56清档重启', 5],
     ['测试服重启', 1],
-    ['测试服发布', 2],
+    ['QA1清档重启', 2],
     ['QA服务重启', 3],
     ['重启预发布环境', 4],
 ]
@@ -19,7 +19,7 @@ encoder = SentenceTransformer("./model/sbert-chinese-general-v2")
 vectors = encoder.encode(text)
 sf = SentenceFaiss(vectors)
 sf.train()
-query = '正式服重启'
+query = 'QA1清档重启'
 query_vector = encoder.encode(query)
 similarity = sf.process(query_vector, 5)
 results = pd.DataFrame({
