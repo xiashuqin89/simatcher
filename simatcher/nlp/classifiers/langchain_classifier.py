@@ -47,6 +47,7 @@ class LangchainClassifier(Classifier):
         knowledge_base_dir = os.path.join(KNOWLEDGE_BASE_DIR, self.knowledge_base_id)
         vectorstore_index = FAISS.load_local(knowledge_base_dir, self.encoder_model)
         results = vectorstore_index.similarity_search_with_score(message.text)
+        results = [item[0].dict() for item in results]
         message.set(RANKING, results)
         message.set(INTENT, results[0])
 
