@@ -104,17 +104,29 @@ def make_path_absolute(path: Text) -> Text:
 
 
 def py_cloud_unpickle(file_name: Text) -> Any:
-    from future.utils import PY2
     import cloudpickle
-
     with io.open(file_name, 'rb') as f:
-        if PY2:
-            return cloudpickle.load(f)
-        else:
-            return cloudpickle.load(f, encoding="latin-1")
+        return cloudpickle.load(f, encoding="latin-1")
 
 
 def py_cloud_pickle(file_name: Text, obj: Any):
     import cloudpickle
     with io.open(file_name, 'wb') as f:
         cloudpickle.dump(obj, f)
+
+
+def make_path_absolute(path: Text) -> Text:
+    if path and not os.path.isabs(path):
+        return os.path.join(os.getcwd(), path)
+    else:
+        return path
+
+
+def create_dir(dir_path: Text):
+    """Creates a directory and its super paths.
+    Succeeds even if the path already exists."""
+    try:
+        os.makedirs(dir_path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise

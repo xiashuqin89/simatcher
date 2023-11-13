@@ -6,3 +6,5 @@ pandas
 aiohttp
 simplejson==3.17.6
 redis==3.5.3
+langchain
+cloudpickle==2.0.0

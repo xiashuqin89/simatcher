@@ -166,12 +166,11 @@ class ComponentBuilder(object):
     def create_component(self,
                          component_name: Text,
                          cfg: Dict,
-                         menu: Optional) -> Component:
+                         component_config: Dict = None) -> Component:
         try:
-            component, cache_key = self._get_from_cache(
-                component_name, Metadata(cfg, None), menu)
+            component, cache_key = self._get_from_cache(component_name, Metadata(cfg, None))
             if component is None:
-                component = menu.create_component_by_name(component_name, cfg)
+                component = self.create_component_by_name(component_name, component_config)
                 self._add_to_cache(component, cache_key)
             return component
         except MissingArgumentError as e:  # pragma: no cover
