@@ -5,11 +5,13 @@ from fastapi import FastAPI, Request, Depends, Cookie, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from simatcher.exceptions import Error
 from simatcher.cli.api.auth import SelfOAuth2PasswordBearer
 from simatcher.cli.api.reponse import Response
-from simatcher.engine import BKChatEngine
-from .models import BKChatModel
+from simatcher.engine import BKChatEngine, KnowledgeBaseEngine
+from simatcher.exceptions import Error
+from .models import (
+    BKChatModel, KBTrainModel, KBPredictModel
+)
 
 
 oauth2_scheme = SelfOAuth2PasswordBearer(tokenUrl="token")
@@ -42,4 +44,18 @@ async def predict_bkchat(item: BKChatModel, bk_uid: Optional[str] = Cookie(None)
     pool = await engine.load_corpus_text(**item.filter)
     slots = await engine.load_slots(**item.filter)
     result = engine.classify(item.text, pool=pool, regex_features=slots)
+    return Response(data=result)
+
+
+@app.post("/api/kb/train/")
+async def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
+    kb = KnowledgeBaseEngine()
+    kb.train(item.training_data, item.knowledge_base_id)
+    return Response()
+
+
+@app.post("/api/kb/predict/")
+async def predict_kb(item: KBPredictModel, bk_uid: Optional[str] = Cookie(None)):
+    kb = KnowledgeBaseEngine()
+    result = kb.predict(item.question, item.knowledge_base_id)
     return Response(data=result)

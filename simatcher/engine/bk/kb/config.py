@@ -1,3 +1,4 @@
+KB_ARCHIVE_PATH = '/app/archive'
 KB_PIPELINE_CONFIG = {
     "language": "zh",
     "training_data": "",
@@ -28,8 +29,7 @@ KB_PIPELINE_CONFIG = {
     ],
     "version": "0.0.0"
 }
-KB_ARCHIVE_PATH = 'archive'
-TRAIN_DATA_SCHEMA = {
+KB_TRAIN_DATA_SCHEMA = {
     "type": "object",
     "properties": {
         "training_examples": {
@@ -39,7 +39,7 @@ TRAIN_DATA_SCHEMA = {
                 "properties": {
                     "text": {"type": ["string", "number"]},
                     "intent": {"type": "string"},
-                    "entities": {"type": "string"},
+                    "entities": {"type": "array"},
                 },
                 "required": ["text"],
                 "extra_options": ["intent", "entities"]

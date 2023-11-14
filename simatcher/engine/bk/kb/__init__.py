@@ -1,15 +1,15 @@
 import os
-from typing import Dict, List
+import copy
+from typing import Dict
 
 from jsonschema import validate as json_validate
-from jsonschema.exceptions import ValidationError
 
 from simatcher.engine.base import Trainer, Runner
-from simatcher.log import logger
 from simatcher.common.io import read_json_file
 from simatcher.exceptions import MissingArgumentError
+from simatcher.log import logger
 from .config import (
-    KB_PIPELINE_CONFIG, KB_ARCHIVE_PATH, TRAIN_DATA_SCHEMA
+    KB_PIPELINE_CONFIG, KB_ARCHIVE_PATH, KB_TRAIN_DATA_SCHEMA
 )
 
 
@@ -22,7 +22,7 @@ def validate_kb_name(knowledge_base_id: str) -> bool:
 
 class KnowledgeBaseEngine:
     def __init__(self, pipeline_config: Dict = KB_PIPELINE_CONFIG, *args, **kwargs):
-        self.pipeline_config = pipeline_config.copy()
+        self.pipeline_config = copy.deepcopy(pipeline_config)
 
     def _merge(self, old: Dict, new: Dict):
         for key, val in new.items():
@@ -42,12 +42,14 @@ class KnowledgeBaseEngine:
         3, save raw files
         4, save vector store
         """
-        json_validate(training_data, TRAIN_DATA_SCHEMA)
+        json_validate(training_data, KB_TRAIN_DATA_SCHEMA)
         if not validate_kb_name(knowledge_base_id):
             raise MissingArgumentError
         if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
             archive_train_data = read_json_file(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model'))
             training_data = self._merge(archive_train_data, archive_train_data)
+
+        self.pipeline_config['pipeline'][2]['knowledge_base_id'] = knowledge_base_id
         trainer = Trainer(self.pipeline_config)
         trainer.train(training_data)
         dir_name = trainer.persist(KB_ARCHIVE_PATH, project_name=knowledge_base_id, fixed_model_name='model')
