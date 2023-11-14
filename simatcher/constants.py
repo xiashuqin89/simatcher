@@ -33,4 +33,4 @@ CLASSIFIER_LANGCHAIN = 'LangchainClassifier'
 
 EXTRACTOR_REGEX_RULE = 'RegexRuleEntityExtractor'
 
-KNOWLEDGE_BASE_DIR = './model/knowledge_base'
+KNOWLEDGE_BASE_DIR = './archive/knowledge_base'

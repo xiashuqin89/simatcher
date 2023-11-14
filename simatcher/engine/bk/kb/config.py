@@ -20,10 +20,56 @@ KB_PIPELINE_CONFIG = {
             "name": "LangchainClassifier",
             "classifier_file": "LangchainClassifier.pkl",
             "class": "simatcher.nlp.classifiers.LangchainClassifier",
-            "knowledge_base_id": "debug",
+            "knowledge_base_id": "shell",
+            "top_k": 4,
+            "score_threshold": 0.5,
             "with_score": True
         }
     ],
-    "trained_at": "20231110-145515",
     "version": "0.0.0"
+}
+KB_ARCHIVE_PATH = 'archive'
+TRAIN_DATA_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "training_examples": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "text": {"type": ["string", "number"]},
+                    "intent": {"type": "string"},
+                    "entities": {"type": "string"},
+                },
+                "required": ["text"],
+                "extra_options": ["intent", "entities"]
+            }
+        },
+        "regex_features": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "pattern": {"type": "string"},
+                },
+                "required": ["name", "pattern"]
+            }
+        },
+        "entity_synonyms": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "value": {"type": "string"},
+                    "synonyms": {"type": "array"},
+                },
+                "required": ["value", "synonyms"]
+            }
+        },
+        "intent_examples": {"type": "array"},
+        "common_examples": {"type": "array"}
+    },
+    "required": ["training_examples"],
+    "entity_synonyms": ["regex_features", "entity_synonyms", "intent_examples", "common_examples"]
 }

@@ -1,4 +1,3 @@
-import re
 import json
 import copy
 from typing import Dict, List, Text, Generator, Union
