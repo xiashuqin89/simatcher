@@ -12,6 +12,7 @@ class KBTrainModel(BaseModel):
     knowledge_base_id: str
     training_data: Dict
     llm_model: str = None
+    is_remove_archive: bool = False
 
 
 class KBPredictModel(BaseModel):
