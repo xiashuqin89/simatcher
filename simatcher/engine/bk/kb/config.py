@@ -18,7 +18,7 @@ KB_PIPELINE_CONFIG = {
             "name": "LangchainFeaturizer",
             "classifier_file": "LangchainFeaturizer.pkl",
             "class": "simatcher.nlp.featurizers.LangchainFeaturizer",
-            "pre_model": "text2vec-base-chinese"
+            "pre_model": "sbert-chinese-general-v2"
         },
         {
             "name": "LangchainClassifier",
@@ -36,7 +36,7 @@ KB_REFINE_NODE = {
     "name": "SummaryRefiner",
     "class": "simatcher.nlp.refiners.SummaryRefiner",
     "llm_model": "chatglm2-6b",
-    "endpoint_url": os.getenv("CHATGLM2_API_ROOT"),
+    "endpoint_url": os.getenv("CHATGLM2_API_ROOT", "http://9.150.39.164:8081"),
     "history": [],
 }
 KB_TRAIN_DATA_SCHEMA = {

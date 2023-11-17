@@ -52,7 +52,8 @@ class KnowledgeBaseEngine:
             raise MissingArgumentError
         # merge data
         if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
-            archive_train_data = read_json_file(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model'))
+            archive_train_data = read_json_file(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id,
+                                                             'model', 'training_data.json'))
             training_data = self._merge(archive_train_data, archive_train_data)
         # set config & train data
         self.pipeline_config['pipeline'][2]['knowledge_base_id'] = knowledge_base_id
