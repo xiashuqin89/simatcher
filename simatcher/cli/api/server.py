@@ -61,4 +61,26 @@ async def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
 async def predict_kb(item: KBPredictModel, bk_uid: Optional[str] = Cookie(None)):
     kb = KnowledgeBaseEngine()
     result = kb.predict(item.question, item.knowledge_base_id)
-    return Response(data=result)
+    try:
+        intent = result['intent']
+        response = intent['page_content']
+        if 'summary' in intent:
+            response = f'{response}\nSummary:\n{intent["summary"]}'
+        source_documents = []
+        for i, src in enumerate(result['intent_ranking']):
+            content = src["page_content"]
+            if src["metadata"].get('doc_url', '').startswith('http'):
+                content = f'{content}\nWIKI: {src["metadata"]["doc_url"]}'
+            source_documents.append(f'出处 [{i + 1}] {src["metadata"]["intent"]}:\n\n{content}')
+    except KeyError:
+        return {
+            'question': item.question,
+            'response': 'no answer for this knowledge base'
+        }
+
+    return {
+        'question': item.question,
+        'response': response,
+        'history': [],
+        'source_documents': source_documents
+    }
