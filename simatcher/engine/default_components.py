@@ -10,6 +10,9 @@ from simatcher.nlp.extractors import (
 from simatcher.nlp.splitters import (
     LangchainSplitter,
 )
+from simatcher.nlp.refiners import (
+    SummaryRefiner,
+)
 
 
 COMPONENT_CLASSES = [
@@ -19,4 +22,5 @@ COMPONENT_CLASSES = [
     L2Classifier,
     LangchainClassifier,
     RegexRuleEntityExtractor,
+    SummaryRefiner,
 ]

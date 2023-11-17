@@ -11,10 +11,10 @@ class BKChatModel(BaseModel):
 class KBTrainModel(BaseModel):
     knowledge_base_id: str
     training_data: Dict
+    llm_model: str = None
 
 
 class KBPredictModel(BaseModel):
     knowledge_base_id: str
     question: str
     history: List = []
-    llm: bool = False

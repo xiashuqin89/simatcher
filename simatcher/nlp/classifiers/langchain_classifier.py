@@ -23,6 +23,7 @@ class LangchainClassifier(Classifier):
     def __init__(self, component_config: Dict[Text, Any] = None):
         super(LangchainClassifier, self).__init__(component_config)
         self.knowledge_base_id = self.component_config.get('knowledge_base_id', 'default')
+        self.knowledge_base_dir = os.path.join(KNOWLEDGE_BASE_DIR, self.knowledge_base_id)
         self.with_score = self.component_config.get('with_score', True)
         self.top_k = self.component_config.get('top_k', 4)
         self.score_threshold = self.component_config.get('score_threshold', 1)
@@ -46,8 +47,7 @@ class LangchainClassifier(Classifier):
 
     def process(self, message: Message, **kwargs):
         logger.info(f'langchain classifier: {message.text}')
-        knowledge_base_dir = os.path.join(KNOWLEDGE_BASE_DIR, self.knowledge_base_id)
-        vectorstore_index = FAISS.load_local(knowledge_base_dir, self.encoder_model)
+        vectorstore_index = FAISS.load_local(self.knowledge_base_dir, self.encoder_model)
         results = vectorstore_index.similarity_search_with_score(message.text,
                                                                  k=self.top_k,
                                                                  search_kwargs={"score_threshold": self.score_threshold})
@@ -57,7 +57,6 @@ class LangchainClassifier(Classifier):
             message.set(INTENT, results[0])
 
     def persist(self, model_dir: Text) -> Dict[Text, Any]:
-        knowledge_base_dir = os.path.join(KNOWLEDGE_BASE_DIR, self.knowledge_base_id)
         self.vectorstore_index = FAISS.from_documents(self.split_docs, self.encoder_model)
-        self.vectorstore_index.save_local(knowledge_base_dir)
+        self.vectorstore_index.save_local(self.knowledge_base_dir)
         super().persist(model_dir)

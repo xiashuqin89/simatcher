@@ -50,7 +50,7 @@ async def predict_bkchat(item: BKChatModel, bk_uid: Optional[str] = Cookie(None)
 @app.post("/api/kb/train/")
 async def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
     kb = KnowledgeBaseEngine()
-    kb.train(item.training_data, item.knowledge_base_id)
+    kb.train(item.training_data, item.knowledge_base_id, item.llm_model)
     return Response()
 
 

@@ -1,4 +1,4 @@
-KB_ARCHIVE_PATH = '/app/archive'
+KB_ARCHIVE_PATH = 'archive'
 KB_PIPELINE_CONFIG = {
     "language": "zh",
     "training_data": "",
@@ -21,13 +21,20 @@ KB_PIPELINE_CONFIG = {
             "name": "LangchainClassifier",
             "classifier_file": "LangchainClassifier.pkl",
             "class": "simatcher.nlp.classifiers.LangchainClassifier",
-            "knowledge_base_id": "shell",
+            "knowledge_base_id": "bk",
             "top_k": 4,
             "score_threshold": 0.5,
             "with_score": True
         }
     ],
     "version": "0.0.0"
+}
+KB_REFINE_NODE = {
+    "name": "SummaryRefiner",
+    "class": "simatcher.nlp.refiners.SummaryRefiner",
+    "llm_model": "chatglm2-6b",
+    "endpoint_url": "http://9.150.39.164:8081",
+    "history": [],
 }
 KB_TRAIN_DATA_SCHEMA = {
     "type": "object",
