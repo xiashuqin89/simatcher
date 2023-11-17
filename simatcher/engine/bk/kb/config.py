@@ -1,3 +1,6 @@
+import os
+
+
 KB_ARCHIVE_PATH = '/app/archive'
 KB_PIPELINE_CONFIG = {
     "language": "zh",
@@ -33,7 +36,7 @@ KB_REFINE_NODE = {
     "name": "SummaryRefiner",
     "class": "simatcher.nlp.refiners.SummaryRefiner",
     "llm_model": "chatglm2-6b",
-    "endpoint_url": "",
+    "endpoint_url": os.getenv("CHATGLM2_API_ROOT"),
     "history": [],
 }
 KB_TRAIN_DATA_SCHEMA = {
