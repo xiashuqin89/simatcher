@@ -7,6 +7,7 @@ from jsonschema import validate as json_validate
 from simatcher.engine.base import Trainer, Runner
 from simatcher.common.io import read_json_file
 from simatcher.exceptions import MissingArgumentError
+from simatcher.nlp.persistor import BKRepoPersistor
 from simatcher.log import logger
 from .config import (
     KB_PIPELINE_CONFIG, KB_ARCHIVE_PATH, KB_TRAIN_DATA_SCHEMA, KB_REFINE_NODE
@@ -37,6 +38,7 @@ class KnowledgeBaseEngine:
               training_data: Dict,
               knowledge_base_id: str,
               llm_model: str = None,
+              is_remove_archive: bool = False,
               **kwargs):
         """
         1, validate input name
@@ -44,19 +46,28 @@ class KnowledgeBaseEngine:
         3, save raw files
         4, save vector store
         """
+        # do validate
         json_validate(training_data, KB_TRAIN_DATA_SCHEMA)
         if not validate_kb_name(knowledge_base_id):
             raise MissingArgumentError
+        # merge data
         if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
             archive_train_data = read_json_file(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model'))
             training_data = self._merge(archive_train_data, archive_train_data)
-
+        # set config & train data
         self.pipeline_config['pipeline'][2]['knowledge_base_id'] = knowledge_base_id
         if llm_model is not None:
             self.pipeline_config['pipeline'].append(KB_REFINE_NODE)
+        logger.info(f'Begin train model...\n{self.pipeline_config}')
         trainer = Trainer(self.pipeline_config)
         trainer.train(training_data)
-        dir_name = trainer.persist(KB_ARCHIVE_PATH, project_name=knowledge_base_id, fixed_model_name='model')
+        # persist
+        logger.info(f'Begin persist model...')
+        persistor = BKRepoPersistor() if is_remove_archive else None
+        dir_name = trainer.persist(KB_ARCHIVE_PATH,
+                                   persistor=persistor,
+                                   project_name=knowledge_base_id,
+                                   fixed_model_name='model')
         logger.info(f'Train successfully...Archive at: {dir_name}')
         return dir_name
 
