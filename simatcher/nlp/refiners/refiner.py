@@ -1,7 +1,3 @@
-import os
-from typing import Text, Optional, Any, Dict
-
-import requests
 from langchain.llms import ChatGLM
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
@@ -12,9 +8,6 @@ from simatcher.meta.message import Message
 from simatcher.constants import REFINE_PROMPT_TEMPLATE
 from simatcher.exceptions import MissingArgumentError
 from simatcher.log import logger
-from simatcher.meta.model import Metadata
-from simatcher.exceptions import ActionFailed
-from simatcher.common.io import py_cloud_pickle, py_cloud_unpickle
 
 
 class Refiner(Component):

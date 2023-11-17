@@ -35,7 +35,7 @@ EXTRACTOR_REGEX_RULE = 'RegexRuleEntityExtractor'
 
 REFINE_SUMMARY = 'SummaryRefiner'
 
-KNOWLEDGE_BASE_DIR = './archive/knowledge_base'
+KNOWLEDGE_BASE_DIR = '/app/archive/knowledge_base'
 
 REFINE_PROMPT_TEMPLATE = """
 <指令>根据已知信息，简洁和专业的来回答问题。如果无法从中得到答案，请说 “根据已知信息无法回答该问题”，不允许在答案中添加编造成分，答案请使用中文。 </指令>

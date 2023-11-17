@@ -4,7 +4,6 @@ from simatcher.constants import (
     REFINE_SUMMARY, RANKING, INTENT, REFINE_PROMPT_TEMPLATE
 )
 from simatcher.meta.message import Message
-from simatcher.exceptions import MissingArgumentError
 from simatcher.log import logger
 from .refiner import Refiner
 
