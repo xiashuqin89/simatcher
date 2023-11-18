@@ -8,6 +8,7 @@ from simatcher.engine.base import Trainer, Runner
 from simatcher.common.io import read_json_file
 from simatcher.exceptions import MissingArgumentError
 from simatcher.nlp.persistor import BKRepoPersistor
+from simatcher.constants import KNOWLEDGE_BASE_DIR
 from simatcher.log import logger
 from .config import (
     KB_PIPELINE_CONFIG, KB_ARCHIVE_PATH, KB_TRAIN_DATA_SCHEMA, KB_REFINE_NODE
@@ -87,3 +88,12 @@ class KnowledgeBaseEngine:
         runner = Runner.load(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model'))
         message = runner.parse(question)
         return message.as_dict()
+
+    @staticmethod
+    def clear(knowledge_base_id: str):
+        """need to set a superuser"""
+        if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
+            os.chdir(KB_ARCHIVE_PATH)
+            os.rmdir(knowledge_base_id)
+        if os.path.isdir(KNOWLEDGE_BASE_DIR):
+            os.rmdir(knowledge_base_id)

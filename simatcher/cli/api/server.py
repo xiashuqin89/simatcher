@@ -48,7 +48,7 @@ async def predict_bkchat(item: BKChatModel, bk_uid: Optional[str] = Cookie(None)
 
 
 @app.post("/api/kb/train/")
-async def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
+def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
     kb = KnowledgeBaseEngine()
     kb.train(item.training_data,
              item.knowledge_base_id,
@@ -58,7 +58,7 @@ async def train_kb(item: KBTrainModel, bk_uid: Optional[str] = Cookie(None)):
 
 
 @app.post("/api/kb/predict/")
-async def predict_kb(item: KBPredictModel, bk_uid: Optional[str] = Cookie(None)):
+def predict_kb(item: KBPredictModel, bk_uid: Optional[str] = Cookie(None)):
     kb = KnowledgeBaseEngine()
     result = kb.predict(item.question, item.knowledge_base_id)
     try:
@@ -84,3 +84,9 @@ async def predict_kb(item: KBPredictModel, bk_uid: Optional[str] = Cookie(None))
         'history': [],
         'source_documents': source_documents
     }
+
+
+@app.delete("/api/kb/{knowledge_base_id}/")
+def delete_kb(knowledge_base_id: str, bk_uid: Optional[str] = Cookie(None)):
+    KnowledgeBaseEngine.clear(knowledge_base_id)
+    return Response()
