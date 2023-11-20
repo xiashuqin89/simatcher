@@ -92,8 +92,12 @@ class KnowledgeBaseEngine:
     @staticmethod
     def clear(knowledge_base_id: str):
         """need to set a superuser"""
-        if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
-            os.chdir(KB_ARCHIVE_PATH)
-            os.rmdir(knowledge_base_id)
-        if os.path.isdir(KNOWLEDGE_BASE_DIR):
-            os.rmdir(knowledge_base_id)
+        try:
+            if os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id)):
+                os.chdir(KB_ARCHIVE_PATH)
+                os.rmdir(knowledge_base_id)
+            if os.path.isdir(KNOWLEDGE_BASE_DIR):
+                os.chdir(KNOWLEDGE_BASE_DIR)
+                os.rmdir(knowledge_base_id)
+        except FileNotFoundError:
+            logger.info(f'{knowledge_base_id} not exist')
