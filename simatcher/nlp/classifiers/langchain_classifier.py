@@ -47,7 +47,7 @@ class LangchainClassifier(Classifier):
 
     def process(self, message: Message, **kwargs):
         logger.info(f'langchain classifier: {message.text}')
-        vectorstore_index = FAISS.load_local(self.knowledge_base_dir, self.encoder_model)
+        vectorstore_index = FAISS.load_local(self.knowledge_base_dir, self.encoder_model, normalize_L2=True)
         results = vectorstore_index.similarity_search_with_score(message.text,
                                                                  k=self.top_k,
                                                                  score_threshold=self.score_threshold)
@@ -57,8 +57,6 @@ class LangchainClassifier(Classifier):
             message.set(INTENT, results[0])
 
     def persist(self, model_dir: Text) -> Dict[Text, Any]:
-        self.vectorstore_index = FAISS.from_documents(self.split_docs,
-                                                      self.encoder_model,
-                                                      normalize_L2=True)
+        self.vectorstore_index = FAISS.from_documents(self.split_docs, self.encoder_model, normalize_L2=True)
         self.vectorstore_index.save_local(self.knowledge_base_dir)
         super().persist(model_dir)

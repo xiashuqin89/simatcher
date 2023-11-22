@@ -18,7 +18,7 @@ KB_PIPELINE_CONFIG = {
             "name": "LangchainFeaturizer",
             "classifier_file": "LangchainFeaturizer.pkl",
             "class": "simatcher.nlp.featurizers.LangchainFeaturizer",
-            "pre_model": "sbert-chinese-general-v2"
+            "pre_model": "text2vec-base-chinese"
         },
         {
             "name": "LangchainClassifier",
