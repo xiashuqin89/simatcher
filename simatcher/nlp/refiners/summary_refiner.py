@@ -17,6 +17,8 @@ class SummaryRefiner(Refiner):
         super(SummaryRefiner, self).__init__(component_config)
         self.llm_model = self.component_config.get('llm_model', 'chatglm2-6b')
         self.endpoint_url = self.component_config.get('endpoint_url')
+        self.api_key = self.component_config.get('api_key', '')
+        self.model = self.component_config.get('model')
         self.max_token = self.component_config.get('max_token', 20000)
         self.history = self.component_config.get('history', [])
 
