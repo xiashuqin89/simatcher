@@ -37,6 +37,8 @@ KB_REFINE_NODE = {
     "class": "simatcher.nlp.refiners.SummaryRefiner",
     "llm_model": "chatglm2-6b",
     "endpoint_url": os.getenv("LLM_API_ROOT", "http://9.150.39.164:8081"),
+    "api_key": os.getenv("LLM_API_KEY", ""),
+    "model": os.getenv("LLM_SUB_MODEL", ""),
     "history": [],
 }
 KB_TRAIN_DATA_SCHEMA = {
