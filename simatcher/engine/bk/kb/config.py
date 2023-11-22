@@ -26,7 +26,7 @@ KB_PIPELINE_CONFIG = {
             "class": "simatcher.nlp.classifiers.LangchainClassifier",
             "knowledge_base_id": "default",
             "top_k": 4,
-            "score_threshold": 0.5,
+            "score_threshold": 1,
             "with_score": True
         }
     ],
@@ -36,7 +36,7 @@ KB_REFINE_NODE = {
     "name": "SummaryRefiner",
     "class": "simatcher.nlp.refiners.SummaryRefiner",
     "llm_model": "chatglm2-6b",
-    "endpoint_url": os.getenv("CHATGLM2_API_ROOT", "http://9.150.39.164:8081"),
+    "endpoint_url": os.getenv("LLM_API_ROOT", "http://9.150.39.164:8081"),
     "history": [],
 }
 KB_TRAIN_DATA_SCHEMA = {
