@@ -59,7 +59,9 @@ class KnowledgeBaseEngine:
         # set config & train data
         self.pipeline_config['pipeline'][2]['knowledge_base_id'] = knowledge_base_id
         if llm_model is not None:
-            self.pipeline_config['pipeline'].append(KB_REFINE_NODE)
+            node_config = copy.deepcopy(KB_REFINE_NODE)
+            node_config['llm_model'] = llm_model
+            self.pipeline_config['pipeline'].append(node_config)
         logger.info(f'Begin train model...\n{self.pipeline_config}')
         trainer = Trainer(self.pipeline_config)
         trainer.train(training_data)
