@@ -87,7 +87,10 @@ class KnowledgeBaseEngine:
         """
         if not validate_kb_name(knowledge_base_id):
             raise MissingArgumentError
-        runner = Runner.load(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model'))
+        model_dir = os.path.join(KB_ARCHIVE_PATH, knowledge_base_id, 'model')
+        if not os.path.isdir(model_dir):
+            return None
+        runner = Runner.load(model_dir)
         message = runner.parse(question)
         return message.as_dict()
 
@@ -103,3 +106,7 @@ class KnowledgeBaseEngine:
                 os.rmdir(knowledge_base_id)
         except FileNotFoundError:
             logger.info(f'{knowledge_base_id} not exist')
+
+    @staticmethod
+    def check(knowledge_base_id: str):
+        return os.path.isdir(os.path.join(KB_ARCHIVE_PATH, knowledge_base_id))
